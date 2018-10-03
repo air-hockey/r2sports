@@ -1,0 +1,10 @@
+{
+  "env": {
+    "MOCKS": "true",
+    "ASSETS_ROUTE": "/assets",
+    "API_ROUTE": "/api",
+    "GRAPHQL_ENDPOINT": "/graphql",
+    "SUBSCRIPTIONS_ENDPOINT": "/subscriptions",
+    "PLAYGROUND_ENDPOINT": "/playground"
+  }
+}

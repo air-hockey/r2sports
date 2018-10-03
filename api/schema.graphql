@@ -1,0 +1,41 @@
+type Query {
+  feed: [Match!]!
+  tournaments(filter: TournamentFilter): [Tournament!]!
+}
+
+type Player {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  fullName: String!
+  avatar: String!
+}
+
+type Match {
+  id: ID!
+  lastModified: String!
+  name: String!
+  challenger: Player!
+  defender: Player!
+  challengerScores: [Int!]!
+  defenderScores: [Int!]!
+  challengerScore: Int!
+  defenderScore: Int!
+  challengerWon: Boolean!
+}
+
+type Tournament {
+  id: ID!
+  name: String!
+  location: String!
+  startDate: String!
+  endDate: String!
+  cover: String!
+}
+
+enum TournamentFilter {
+  ALL
+  NOW
+  UPCOMING
+  PREVIOUS
+}
