@@ -10,7 +10,7 @@ const Header = styled.header`
   height: 3em;
   padding: 0 ${p => p.theme.size.s};
   box-shadow: ${p => p.theme.shadow.xs};
-  background: ${p => p.theme.color.gradient(p.theme.color.primary)};
+  background: ${p => p.theme.color.primary};
   color: ${p => p.theme.color.white};
   position: sticky;
   top: 0px;
