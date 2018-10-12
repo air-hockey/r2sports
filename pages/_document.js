@@ -44,7 +44,7 @@ export default class MyDocument extends Document {
           <meta name="apple-mobile-web-app-capable" content="yes" />
           <meta name="mobile-web-app-capable" content="yes" />
           <link
-            href="https://fonts.googleapis.com/css?family=Montserrat:700,900|Rubik"
+            href="https://fonts.googleapis.com/css?family=Montserrat:600,700,900|Rubik"
             rel="stylesheet"
           />
           <GlobalStyle />

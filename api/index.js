@@ -8,7 +8,8 @@ const typeDefs = 'api/schema.graphql'
 const resolvers = {
   Query: {
     feed: () => [],
-    tournaments: () => []
+    tournaments: () => [],
+    tournament: () => null
   }
 }
 

@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import MatchCard from 'components/match-card'
 
-const Feed = styled.section`
+const Section = styled.section`
   padding: ${p => p.theme.size.m} 0 0;
 `
 
@@ -30,8 +30,8 @@ const feedQuery = gql`
   }
 `
 
-export default () => (
-  <Feed>
+const Feed = () => (
+  <Section>
     <Query query={feedQuery}>
       {({ loading, error, data }) => {
         if (loading) return <p>Loading...</p>
@@ -47,7 +47,7 @@ export default () => (
             ...props
           }) => (
             <MatchCard
-              key={id}
+              key={`feed_${id}`}
               id={id}
               title={name}
               timestamp={lastModified}
@@ -61,5 +61,9 @@ export default () => (
         )
       }}
     </Query>
-  </Feed>
+  </Section>
 )
+
+Feed.displayName = 'Feed'
+
+export default Feed

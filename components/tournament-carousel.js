@@ -1,7 +1,7 @@
 import Carousel from 'nuka-carousel'
 import TournamentCard from 'components/tournament-card'
 
-export default ({ tournaments }) => (
+const TournamentCarousel = ({ tournaments }) => (
   <Carousel
     framePadding="0.5em"
     frameOverflow="visible"
@@ -14,3 +14,7 @@ export default ({ tournaments }) => (
     ))}
   </Carousel>
 )
+
+TournamentCarousel.displayName = 'TournamentCarousel'
+
+export default TournamentCarousel

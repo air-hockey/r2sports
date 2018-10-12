@@ -3,23 +3,41 @@ import dayjs from 'dayjs'
 import { MockList } from 'graphql-yoga'
 
 const players = [
-  'Mark Brouch',
-  'Brandon Hedrick',
-  'Dan Meyer',
-  'Brian Quezada',
-  'Billy Stubbs',
-  'Matt Lemoyne',
-  'Allison DiMichele',
-  'Maris Benz',
-  'Eric Rood',
-  'Chase Thompson',
-  'Brian Niebhur'
+  { fullName: 'Mark Brouch', location: 'Honolulu, HI' },
+  { fullName: 'Brandon Hedrick', location: 'Chicago, IL' },
+  { fullName: 'Dan Meyer', location: 'Chicago, IL' },
+  { fullName: 'Brian Quezada', location: 'Chicago, IL' },
+  { fullName: 'Billy Stubbs', location: 'Chicago, IL' },
+  { fullName: 'Matt Lemoyne', location: 'Chicago, IL' },
+  { fullName: 'Allison DiMichele', location: 'Chicago, IL' },
+  { fullName: 'Maris Benz', location: 'Seattle, WA' },
+  { fullName: 'Eric Rood', location: 'Chicago, IL' },
+  { fullName: 'Chase Thompson', location: 'Chicago, IL' },
+  { fullName: 'Brian Niebhur', location: 'Chicago, IL' }
 ]
 
 const events = [
-  { name: '2018 AHPA World Championships', location: 'Colorado Springs, CO' },
-  { name: '2018 Texas State Open', location: 'Houston, TX' },
-  { name: '2018 USAA World Championships', location: 'Chicago, IL' }
+  {
+    name: '2018 AHPA World Championships',
+    slug: '2018-ahpa-world-championships',
+    location: 'Colorado Springs, CO',
+    description:
+      'The 2018 AHPA World Championship Open Tournament is a USAA-sanctioned world ranking tournament, featuring a 64 player double-elimination bracket.'
+  },
+  {
+    name: '2018 Texas State Open',
+    slug: '2018-texas-state-open',
+    location: 'Houston, TX',
+    description:
+      'The 2018 Texas State Open Tournament is a USAA-sanctioned rated tournament featuring a 32 player double-elimination bracket.'
+  },
+  {
+    name: '2018 USAA World Championships',
+    slug: '2018-usaa-world-championships',
+    location: 'Chicago, IL',
+    description:
+      'The 2018 USAA World Chapionship Open Tournament is a USAA-sanctioned world ranking tournament featuring a 64 player double-elimination bracket.'
+  }
 ]
 
 const rounds = [
@@ -40,14 +58,16 @@ export default {
     tournaments: () => new MockList([2, 5])
   }),
   Player: () => {
-    const player = casual.random_element(players)
+    const { fullName, location } = casual.random_element(players)
 
-    const name = player.split(' ')
+    const name = fullName.split(' ')
 
     return {
       firstName: name[0],
       lastName: name[1],
-      fullName: player,
+      fullName,
+      location,
+      rating: casual.integer(1200, 3000),
       avatar: `https://ui-avatars.com/api/?size=100&name=${name[0]}+${name[1]}`
     }
   },
@@ -90,7 +110,7 @@ export default {
     }
   },
   Tournament: () => {
-    const { name, location } = casual.random_element(events)
+    const event = casual.random_element(events)
     const startDate = dayjs(new Date())
       .add(casual.integer(-30, 30), 'day')
       .add(casual.integer(-12, 12), 'month')
@@ -100,11 +120,11 @@ export default {
       .format()
 
     return {
-      name,
-      location,
+      ...event,
       startDate,
       endDate,
-      cover: `/assets/images/${casual.random_element(coverPhotos)}`
+      cover: `/assets/images/${casual.random_element(coverPhotos)}`,
+      participants: () => new MockList([24, 64])
     }
   }
 }

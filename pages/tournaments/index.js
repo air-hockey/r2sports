@@ -4,8 +4,6 @@ import styled from 'styled-components'
 
 import TournamentCarousel from 'components/tournament-carousel'
 
-const Tournaments = styled.div``
-
 const Title = styled.h1`
   padding: 0 ${p => p.theme.size.s};
 `
@@ -22,7 +20,7 @@ const Subheading = styled.h2`
   padding: 0 ${p => p.theme.size.xs};
   margin: ${p => p.theme.size.s} 0;
   color: ${p => p.theme.color.darkGray};
-  font-weight: ${p => p.theme.font.weight.bold};
+  font-weight: ${p => p.theme.font.weight.semiBold};
 `
 
 const tournamentsQuery = gql`
@@ -30,6 +28,7 @@ const tournamentsQuery = gql`
     tournaments(filter: $filter) {
       id
       name
+      slug
       location
       startDate
       endDate
@@ -38,8 +37,8 @@ const tournamentsQuery = gql`
   }
 `
 
-export default () => (
-  <Tournaments>
+const Tournaments = () => (
+  <>
     <Title>Tournaments</Title>
     <Section>
       <Subheading>Happening Now</Subheading>
@@ -48,7 +47,9 @@ export default () => (
           if (loading) return <p>Loading...</p>
           if (error) return <p>Error :(</p>
 
-          return <TournamentCarousel tournaments={data.tournaments} />
+          const { tournaments } = data
+
+          return <TournamentCarousel tournaments={tournaments} />
         }}
       </Query>
     </Section>
@@ -59,7 +60,9 @@ export default () => (
           if (loading) return <p>Loading...</p>
           if (error) return <p>Error :(</p>
 
-          return <TournamentCarousel tournaments={data.tournaments} />
+          const { tournaments } = data
+
+          return <TournamentCarousel tournaments={tournaments} />
         }}
       </Query>
     </Section>
@@ -70,9 +73,15 @@ export default () => (
           if (loading) return <p>Loading...</p>
           if (error) return <p>Error :(</p>
 
-          return <TournamentCarousel tournaments={data.tournaments} />
+          const { tournaments } = data
+
+          return <TournamentCarousel tournaments={tournaments} />
         }}
       </Query>
     </Section>
-  </Tournaments>
+  </>
 )
+
+Tournaments.displayName = 'Tournaments'
+
+export default Tournaments

@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-const BoxScore = styled.table`
+const Table = styled.table`
   border-collapse: collapse;
 `
 
@@ -29,14 +29,14 @@ const Score = styled.td`
   }
 `
 
-export default ({
+const BoxScore = ({
   id,
   challengerName,
   defenderName,
   challengerScores = [],
   defenderScores = []
 }) => (
-  <BoxScore>
+  <Table>
     <tbody>
       <Scores>
         <Player>{challengerName}</Player>
@@ -51,5 +51,9 @@ export default ({
         ))}
       </Scores>
     </tbody>
-  </BoxScore>
+  </Table>
 )
+
+BoxScore.displayName = 'BoxScore'
+
+export default BoxScore

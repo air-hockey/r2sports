@@ -5,6 +5,11 @@ import { Menu } from 'styled-icons/material/Menu'
 import { EventNote } from 'styled-icons/material/EventNote'
 
 const Header = styled.header`
+  position: fixed;
+  z-index: ${p => p.theme.zIndex.fixed};
+  top: 0;
+  left: 0;
+  right: 0;
   display: flex;
   align-items: center;
   height: 3em;
@@ -12,8 +17,6 @@ const Header = styled.header`
   box-shadow: ${p => p.theme.shadow.xs};
   background: ${p => p.theme.color.primary};
   color: ${p => p.theme.color.white};
-  position: sticky;
-  top: 0px;
 
   > * {
     padding: 0 ${p => p.theme.size.m};
@@ -61,7 +64,7 @@ const ActiveLink = withRouter(({ children, router, href }) => {
   )
 })
 
-export default () => (
+const AppHeader = () => (
   <Header>
     <Logo>R2sports</Logo>
     <ActiveLink href="/feed">
@@ -73,3 +76,7 @@ export default () => (
     <MenuIcon />
   </Header>
 )
+
+AppHeader.displayName = 'AppHeader'
+
+export default AppHeader

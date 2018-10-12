@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import dayjs from 'dayjs'
+import { formatDate } from 'lib/util'
 
 import routes from 'app/routes'
 
@@ -25,6 +25,7 @@ const Card = styled.div`
   border-radius: ${p => p.theme.size.xs};
   padding: ${p => p.theme.size.m};
   text-align: right;
+  line-height: ${p => p.theme.font.lineHeight.small};
 
   &:before {
     content: '';
@@ -52,27 +53,23 @@ const Location = styled.span`
   margin-top: ${p => p.theme.size.m};
 `
 
-export default ({ id, name, location, startDate, endDate, cover }) => {
-  const formatDate = date =>
-    dayjs(date).format(
-      `MMM DD${
-        dayjs(date).format('YYYY') !== dayjs().format('YYYY') ? ', YYYY' : ''
-      }`
-    )
+const TournamentCard = ({
+  name,
+  slug,
+  location,
+  startDate,
+  endDate,
+  cover
+}) => (
+  <Link route={`tournaments/${slug}`} prefetch>
+    <Card cover={cover}>
+      <Date>{formatDate(startDate, endDate)}</Date>
+      <Title>{name}</Title>
+      <Location>{location}</Location>
+    </Card>
+  </Link>
+)
 
-  const date =
-    dayjs(startDate).format('DD/MM/YYYY') ===
-    dayjs(endDate).format('DD/MM/YYYY')
-      ? formatDate(startDate)
-      : `${formatDate(startDate)} - ${formatDate(endDate)}`
+TournamentCard.displayName = 'TournamentCard'
 
-  return (
-    <Link route={`tournaments/${id}`} prefetch>
-      <Card cover={cover}>
-        <Date>{date}</Date>
-        <Title>{name}</Title>
-        <Location>{location}</Location>
-      </Card>
-    </Link>
-  )
-}
+export default TournamentCard

@@ -1,6 +1,7 @@
 type Query {
   feed: [Match!]!
   tournaments(filter: TournamentFilter): [Tournament!]!
+  tournament(slug: String!): Tournament!
 }
 
 type Player {
@@ -8,6 +9,8 @@ type Player {
   firstName: String!
   lastName: String!
   fullName: String!
+  location: String!
+  rating: Int!
   avatar: String!
 }
 
@@ -27,10 +30,13 @@ type Match {
 type Tournament {
   id: ID!
   name: String!
+  slug: String!
   location: String!
+  description: String!
   startDate: String!
   endDate: String!
   cover: String!
+  participants: [Player!]!
 }
 
 enum TournamentFilter {

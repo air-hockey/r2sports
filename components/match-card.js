@@ -13,7 +13,8 @@ const Card = styled.article`
 const Title = styled.h2`
   margin: 0;
   font-size: ${p => p.theme.font.size.s};
-  font-weight: normal;
+  font-weight: ${p => p.theme.font.weight.regular};
+  line-height: ${p => p.theme.font.lineHeight.condensed};
 `
 
 const DateTime = styled.span`
@@ -78,7 +79,7 @@ const BoxScoreTitle = styled.span`
   font-style: italic;
 `
 
-export default ({
+const MatchCard = ({
   id,
   title,
   timestamp,
@@ -125,3 +126,7 @@ export default ({
     />
   </Card>
 )
+
+MatchCard.displayName = 'MatchCard'
+
+export default MatchCard
