@@ -1,5 +1,6 @@
 import express from 'express'
 import next from 'next'
+import compression from 'compression'
 
 import assetsMiddleware from './assets'
 import routes from './routes'
@@ -17,8 +18,10 @@ const {
 } = process.env
 
 const app = express()
-const nextApp = next({ dev: NODE_ENV !== 'production' })
 
+app.use(compression())
+
+const nextApp = next({ dev: NODE_ENV !== 'production' })
 nextApp.prepare().then(() => {
   console.log(`> Ready on ${HOST}:${PORT}`)
 })
