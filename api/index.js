@@ -10,6 +10,9 @@ const resolvers = {
     feed: () => [],
     tournaments: () => [],
     tournament: () => null
+  },
+  Mutation: {
+    followTournament: () => null
   }
 }
 

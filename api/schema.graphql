@@ -4,6 +4,10 @@ type Query {
   tournament(slug: String!): Tournament!
 }
 
+type Mutation {
+  followTournament(tournamentId: ID!): Tournament!
+}
+
 type Player {
   id: ID!
   firstName: String!
@@ -27,16 +31,31 @@ type Match {
   challengerWon: Boolean!
 }
 
+type Location {
+  id: ID!
+  name: String!
+  city: String!
+  state: String!
+  country: String!
+  coordinates: Coordinates!
+}
+
+type Coordinates {
+  lat: Float!
+  lng: Float!
+}
+
 type Tournament {
   id: ID!
   name: String!
   slug: String!
-  location: String!
+  location: Location!
   description: String!
   startDate: String!
   endDate: String!
   cover: String!
   participants: [Player!]!
+  isFollowing: Boolean!
 }
 
 enum TournamentFilter {

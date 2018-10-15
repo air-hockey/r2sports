@@ -1,0 +1,17 @@
+[
+  {
+    "name": "2018 AHPA World Championships",
+    "slug": "2018-ahpa-world-championships",
+    "description": "The 2018 AHPA World Championship Open Tournament is a USAA-sanctioned world ranking tournament, featuring a 64 player double-elimination bracket."
+  },
+  {
+    "name": "2018 Texas State Open",
+    "slug": "2018-texas-state-open",
+    "description": "The 2018 Texas State Open Tournament is a USAA-sanctioned rated tournament featuring a 32 player double-elimination bracket."
+  },
+  {
+    "name": "2018 USAA World Championships",
+    "slug": "2018-usaa-world-championships",
+    "description": "The 2018 USAA World Chapionship Open Tournament is a USAA-sanctioned world ranking tournament featuring a 64 player double-elimination bracket."
+  }
+]

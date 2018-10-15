@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Emporium Arcade Bar - Logan Square",
+    "city": "Chicago",
+    "state": "IL",
+    "country": "USA",
+    "coordinates": {
+      "lat": 41.924269,
+      "lng": -87.699332
+    }
+  },
+  {
+    "name": "Chapel Hills Mall",
+    "city": "Colorado Springs",
+    "state": "CO",
+    "country": "USA",
+    "coordinates": {
+      "lat": 38.947723,
+      "lng": -104.794488
+    }
+  },
+  {
+    "name": "University of Houston",
+    "city": "Houston",
+    "state": "TX",
+    "country": "USA",
+    "coordinates": {
+      "lat": 29.720502,
+      "lng": -95.415985
+    }
+  }
+]
