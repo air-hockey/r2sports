@@ -3,8 +3,10 @@ import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 import styled, { css } from 'styled-components'
 import dayjs from 'dayjs'
-import { formatDate } from 'lib/util'
+import { formatDate, relativeDateString } from 'lib/util'
+import { withRouter } from 'next/router'
 
+import Head from 'next/head'
 import { InfoOutline } from 'styled-icons/material/InfoOutline'
 import { Newspaper } from 'styled-icons/fa-regular/Newspaper'
 import { Trophy } from 'styled-icons/fa-solid/Trophy'
@@ -13,6 +15,7 @@ import { Clock } from 'styled-icons/feather/Clock'
 import { MapPin } from 'styled-icons/feather/MapPin'
 import Parallax from 'components/parallax'
 import Button from 'components/button'
+import Map from 'components/map'
 
 const Headline = styled.div`
   display: flex;
@@ -117,6 +120,7 @@ const Detail = styled.dl`
   display: flex;
   align-items: center;
   margin: ${p => p.theme.size.m};
+  line-height: ${p => p.theme.font.lineHeight.small};
 
   & > dt {
     color: ${p => p.theme.color.gray};
@@ -125,6 +129,13 @@ const Detail = styled.dl`
   & > dd {
     margin-left: ${p => p.theme.size.s};
   }
+`
+
+const DetailSubLine = styled.span`
+  display: block;
+  font-size: ${p => p.theme.font.size.s};
+  font-style: italic;
+  color: ${p => p.theme.color.darkGray};
 `
 
 const Description = styled.div`
@@ -187,7 +198,15 @@ const tournamentQuery = gql`
     tournament(slug: $slug) {
       id
       name
-      location
+      location {
+        name
+        city
+        state
+        coordinates {
+          lat
+          lng
+        }
+      }
       description
       startDate
       endDate
@@ -202,13 +221,16 @@ const tournamentQuery = gql`
     }
   }
 `
-export default class Tournament extends Component {
-  static async getInitialProps({ query: { slug } = {} }) {
-    return { slug }
+class Tournament extends Component {
+  static async getInitialProps({
+    query: { slug } = {},
+    req: { hostname } = {}
+  }) {
+    return { slug, origin: `https://${hostname}` }
   }
 
   render() {
-    const { slug } = this.props
+    const { slug, origin } = this.props
 
     return (
       <Query query={tournamentQuery} variables={{ slug }}>
@@ -220,7 +242,7 @@ export default class Tournament extends Component {
             tournament: {
               cover,
               name,
-              location,
+              location: { name: location, city, state, coordinates },
               description,
               startDate,
               endDate,
@@ -229,83 +251,118 @@ export default class Tournament extends Component {
           } = data
 
           return (
-            <Parallax image={`${cover}?width=500`}>
-              <Section>
-                <Headline>
-                  <DateBlock>
-                    <Month>{dayjs(startDate).format('MMM')}</Month>
-                    <Day>{dayjs(startDate).format('DD')}</Day>
-                  </DateBlock>
-                  <Title>{name}</Title>
-                </Headline>
-                <Button style="primary" block={true}>
-                  Follow
-                </Button>
-                <Button style="secondary" block={true}>
-                  Register
-                </Button>
-                <Nav>
-                  <ul>
-                    <NavItem active={true}>
-                      <InfoIcon />
-                      Info
-                    </NavItem>
-                    <NavItem>
-                      <FeedIcon />
-                      Feed
-                    </NavItem>
-                    <NavItem>
-                      <ResultsIcon />
-                      Results
-                    </NavItem>
-                    <NavItem>
-                      <ShareIcon />
-                      Share
-                    </NavItem>
-                  </ul>
-                </Nav>
-                <Detail>
-                  <dt>
-                    <TimeIcon />
-                  </dt>
-                  <dd>{formatDate(startDate, endDate)}</dd>
-                </Detail>
-                <Detail>
-                  <dt>
-                    <LocationIcon />
-                  </dt>
-                  <dd>{location}</dd>
-                </Detail>
-                <Description>{description}</Description>
-              </Section>
-              <Section>
-                <Participants>
-                  {participants.length} players have registered:
-                  <ul>
-                    {participants.map(
-                      ({ id, fullName, location, avatar, rating }) => (
-                        <Participant key={`participant-${id}`}>
-                          <ParticipantAvatar src={avatar} />
-                          <ParticipantDetails>
-                            <ParticipantName>{fullName}</ParticipantName>
-                            <ParticipantLocation>
-                              {location}
-                            </ParticipantLocation>
-                          </ParticipantDetails>
-                          <ParticipantRating>
-                            rt.
-                            <span>{rating}</span>
-                          </ParticipantRating>
-                        </Participant>
-                      )
-                    )}
-                  </ul>
-                </Participants>
-              </Section>
-            </Parallax>
+            <>
+              <Head>
+                <title>{name}</title>
+                <meta property="og:title" content={name} key="ogTitle" />
+                <meta
+                  property="og:url"
+                  content={`${origin}/tournaments/${slug}/`}
+                  key="ogUrl"
+                />
+                <meta property="og:type" content="article" key="ogType" />
+                <meta
+                  property="og:image"
+                  content={`${origin}${cover}?width=1200&height=627`}
+                  key="ogImage"
+                />
+                <meta
+                  property="og:description"
+                  content={description}
+                  key="ogDescription"
+                />
+              </Head>
+              <Parallax image={`${cover}?width=500`}>
+                <Section>
+                  <Headline>
+                    <DateBlock>
+                      <Month>{dayjs(startDate).format('MMM')}</Month>
+                      <Day>{dayjs(startDate).format('DD')}</Day>
+                    </DateBlock>
+                    <Title>{name}</Title>
+                  </Headline>
+                  <Button style="primary" block={true}>
+                    Follow
+                  </Button>
+                  <Button style="secondary" block={true}>
+                    Register
+                  </Button>
+                  <Nav>
+                    <ul>
+                      <NavItem active={true}>
+                        <InfoIcon />
+                        Info
+                      </NavItem>
+                      <NavItem>
+                        <FeedIcon />
+                        Feed
+                      </NavItem>
+                      <NavItem>
+                        <ResultsIcon />
+                        Results
+                      </NavItem>
+                      <NavItem>
+                        <ShareIcon />
+                        Share
+                      </NavItem>
+                    </ul>
+                  </Nav>
+                  <Detail>
+                    <dt>
+                      <TimeIcon />
+                    </dt>
+                    <dd>
+                      {formatDate(startDate, endDate)}
+                      <DetailSubLine>
+                        {relativeDateString(startDate)}
+                      </DetailSubLine>
+                    </dd>
+                  </Detail>
+                  <Detail>
+                    <dt>
+                      <LocationIcon />
+                    </dt>
+                    <dd>
+                      {location}
+                      <DetailSubLine>{`${city}, ${state}`}</DetailSubLine>
+                    </dd>
+                  </Detail>
+                  <Description>{description}</Description>
+                </Section>
+                <Section>
+                  {location}:<Map coordinates={coordinates} />
+                </Section>
+                <Section>
+                  <Participants>
+                    {participants.length} players have registered:
+                    <ul>
+                      {participants.map(
+                        ({ id, fullName, location, avatar, rating }) => (
+                          <Participant key={`participant-${id}`}>
+                            <ParticipantAvatar src={avatar} />
+                            <ParticipantDetails>
+                              <ParticipantName>{fullName}</ParticipantName>
+                              <ParticipantLocation>
+                                {location}
+                              </ParticipantLocation>
+                            </ParticipantDetails>
+                            <ParticipantRating>
+                              rt.
+                              <span>{rating}</span>
+                            </ParticipantRating>
+                          </Participant>
+                        )
+                      )}
+                    </ul>
+                  </Participants>
+                </Section>
+              </Parallax>
+            </>
           )
         }}
       </Query>
     )
   }
 }
+
+export default withRouter(Tournament)

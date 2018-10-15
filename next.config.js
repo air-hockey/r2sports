@@ -1,5 +1,4 @@
 const withPlugins = require('next-compose-plugins')
-const { EnvironmentPlugin } = require('webpack')
 const optimizedImages = require('next-optimized-images')
 
 const getDefaults = config => {
@@ -15,6 +14,8 @@ module.exports = withPlugins([optimizedImages], {
     HOST: process.env.NOW_URL || 'http://localhost',
     PORT: process.env.NOW_URL ? 443 : 3000,
     API_ROUTE: '/api',
-    GRAPHQL_ENDPOINT: '/graphql'
+    GRAPHQL_ENDPOINT: '/graphql',
+    FACEBOOK_APP_ID: undefined,
+    MAPBOX_API_KEY: undefined
   })
 })

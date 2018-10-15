@@ -26,16 +26,6 @@ const Card = styled.div`
   padding: ${p => p.theme.size.m};
   text-align: right;
   line-height: ${p => p.theme.font.lineHeight.small};
-
-  &:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: ${p => p.theme.color.black};
-  }
 `
 
 const Title = styled.h3`
@@ -56,7 +46,7 @@ const Location = styled.span`
 const TournamentCard = ({
   name,
   slug,
-  location,
+  location: { city, state },
   startDate,
   endDate,
   cover
@@ -65,7 +55,9 @@ const TournamentCard = ({
     <Card cover={cover}>
       <Date>{formatDate(startDate, endDate)}</Date>
       <Title>{name}</Title>
-      <Location>{location}</Location>
+      <Location>
+        {city}, {state}
+      </Location>
     </Card>
   </Link>
 )

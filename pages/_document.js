@@ -2,6 +2,11 @@ import Document, { Head, Main, NextScript } from 'next/document'
 import { ServerStyleSheet } from 'styled-components'
 import styledNormalize from 'styled-normalize'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
+import getConfig from 'next/config'
+
+const {
+  publicRuntimeConfig: { FACEBOOK_APP_ID }
+} = getConfig()
 
 const GlobalStyle = createGlobalStyle`
   ${styledNormalize}
@@ -43,6 +48,7 @@ export default class MyDocument extends Document {
           />
           <meta name="apple-mobile-web-app-capable" content="yes" />
           <meta name="mobile-web-app-capable" content="yes" />
+          <meta property="fb:app_id" content={FACEBOOK_APP_ID} key="fbAppId" />
           <link
             href="https://fonts.googleapis.com/css?family=Montserrat:600,700,900|Rubik"
             rel="stylesheet"

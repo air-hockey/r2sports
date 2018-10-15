@@ -29,7 +29,10 @@ const tournamentsQuery = gql`
       id
       name
       slug
-      location
+      location {
+        city
+        state
+      }
       startDate
       endDate
       cover

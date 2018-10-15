@@ -5,6 +5,8 @@
     "API_ROUTE": "/api",
     "GRAPHQL_ENDPOINT": "/graphql",
     "SUBSCRIPTIONS_ENDPOINT": "/subscriptions",
-    "PLAYGROUND_ENDPOINT": "/playground"
+    "PLAYGROUND_ENDPOINT": "/playground",
+    "FACEBOOK_APP_ID": "@facebook-app-id",
+    "MAPBOX_API_KEY": "@mapbox-api-key"
   }
 }
