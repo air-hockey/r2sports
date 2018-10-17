@@ -12,13 +12,13 @@ export default {
     tournaments: () => new MockList([2, 5])
   }),
   Mutation: () => ({
-    followTournament: (_, { tournamentId }) => {
-      const tournament = new Tournament()
+    followTournament: (_, { tournamentId, unfollow }) => {
+      const tournament = Tournament(_, { id: tournamentId })
 
       return {
+        ...tournament,
         id: tournamentId,
-        isFollowing: true,
-        ...tournament
+        isFollowing: !unfollow
       }
     }
   }),

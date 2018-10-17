@@ -3,7 +3,6 @@ import next from 'next'
 import compression from 'compression'
 
 import assetsMiddleware from './assets'
-import routes from './routes'
 import createGraphQLServer from './api'
 
 const {
@@ -17,18 +16,19 @@ const {
   PLAYGROUND_ENDPOINT
 } = process.env
 
-const app = express()
+const server = express()
 
-app.use(compression())
+server.use(compression())
 
-const nextApp = next({ dev: NODE_ENV !== 'production' })
-nextApp.prepare().then(() => {
+const app = next({ dev: NODE_ENV !== 'production' })
+
+app.prepare().then(() => {
   console.log(`> Ready on ${HOST}:${PORT}`)
 })
 
-app.use(ASSETS_ROUTE, assetsMiddleware)
+server.use(ASSETS_ROUTE, assetsMiddleware)
 
-app.use(
+server.use(
   API_ROUTE,
   createGraphQLServer({
     port: PORT,
@@ -38,6 +38,12 @@ app.use(
   })
 )
 
-app.use(routes.getRequestHandler(nextApp))
+server.get('/tournaments/:slug', (req, res) => {
+  app.render(req, res, '/tournaments/tournament', { slug: req.params.slug })
+})
 
-export default app
+server.get('*', (req, res) => {
+  return app.getRequestHandler()(req, res)
+})
+
+export default server

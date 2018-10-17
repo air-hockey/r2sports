@@ -13,6 +13,8 @@ const BaseButton = styled.button`
   line-height: ${p => p.theme.button.lineHeight};
   border-radius: ${p => p.theme.button.borderRadius};
   background-color: ${p => p.theme.color[p.color]};
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 
   &:hover,
   &:focus {
@@ -40,7 +42,7 @@ const BaseButton = styled.button`
   }
 `
 
-const BlockButton = styled(BaseButton)`
+const BlockButton = Element => styled(Element)`
   display: block;
   width: 100%;
   margin-top: ${p => p.theme.button.blockSpacingY};
@@ -50,10 +52,44 @@ const BlockButton = styled(BaseButton)`
   }
 `
 
-const Button = ({ children, style, block }) => {
-  const ButtonElement = block ? BlockButton : BaseButton
+const OutlineButton = Element => styled(Element)`
+  color: ${p => p.theme.color[p.color]};
+  border-color: ${p => p.theme.color[p.color]};
+  background-color: transparent;
 
-  return <ButtonElement color={style}>{children}</ButtonElement>
+  &:hover {
+    color: ${p => p.theme.color.white};
+    background-color: ${p => p.theme.color[p.color]};
+  }
+
+  &:disabled {
+    color: ${p => p.theme.color[p.color]};
+    background-color: transparent;
+  }
+
+  &:not(disabled):active {
+    color: ${p => p.theme.color.white};
+    background-color: ${p => p.theme.color[p.color]};
+    border-color: ${p => p.theme.color[p.color]};
+  }
+`
+
+const composeStyles = (...fns) =>
+  fns
+    .filter(fn => typeof fn === 'function')
+    .reduceRight((f, g) => (...args) => g(f(...args)), value => value)
+
+const Button = ({ children, style, block, outline, onClick = () => {} }) => {
+  const ButtonElement = composeStyles(
+    block && BlockButton,
+    outline && OutlineButton
+  )(BaseButton)
+
+  return (
+    <ButtonElement color={style} onClick={onClick}>
+      {children}
+    </ButtonElement>
+  )
 }
 
 Button.displayName = 'Button'

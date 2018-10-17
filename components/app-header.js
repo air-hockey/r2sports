@@ -1,3 +1,4 @@
+import { Component } from 'react'
 import { withRouter } from 'next/router'
 import styled from 'styled-components'
 import { Newspaper } from 'styled-icons/fa-regular/Newspaper'
@@ -47,32 +48,53 @@ const StyledLink = styled.a`
   color: ${p => p.theme.color.white};
 `
 
-const ActiveLink = withRouter(({ children, router, href }) => {
-  const handleClick = e => {
+class ActiveLink extends Component {
+  constructor(props) {
+    super(props)
+
+    this.handleClick = this.handleClick.bind(this)
+  }
+
+  componentDidMount() {
+    const { router, href } = this.props
+
+    router.prefetch(href)
+  }
+
+  handleClick(e) {
     e.preventDefault()
+
+    const { router, href } = this.props
+
     router.push(href)
   }
 
-  return (
-    <StyledLink
-      href={href}
-      onClick={handleClick}
-      active={router.pathname.includes(href)}
-    >
-      {children}
-    </StyledLink>
-  )
-})
+  render() {
+    const { children, router, href } = this.props
+
+    return (
+      <StyledLink
+        href={href}
+        onClick={this.handleClick}
+        active={router.pathname.includes(href)}
+      >
+        {children}
+      </StyledLink>
+    )
+  }
+}
+
+const Link = withRouter(ActiveLink)
 
 const AppHeader = () => (
   <Header>
     <Logo>R2sports</Logo>
-    <ActiveLink href="/feed">
+    <Link href="/feed">
       <FeedIcon />
-    </ActiveLink>
-    <ActiveLink href="/tournaments">
+    </Link>
+    <Link href="/tournaments">
       <TournamentsIcon />
-    </ActiveLink>
+    </Link>
     <MenuIcon />
   </Header>
 )

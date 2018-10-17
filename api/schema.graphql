@@ -1,11 +1,11 @@
 type Query {
   feed: [Match!]!
   tournaments(filter: TournamentFilter): [Tournament!]!
-  tournament(slug: String!): Tournament!
+  tournament(id: ID, slug: String): Tournament!
 }
 
 type Mutation {
-  followTournament(tournamentId: ID!): Tournament!
+  followTournament(tournamentId: ID!, unfollow: Boolean): Tournament!
 }
 
 type Player {

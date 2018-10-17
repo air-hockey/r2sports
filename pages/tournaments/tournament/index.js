@@ -15,7 +15,9 @@ import { Clock } from 'styled-icons/feather/Clock'
 import { MapPin } from 'styled-icons/feather/MapPin'
 import Parallax from 'components/parallax'
 import Button from 'components/button'
+import FollowTournamentButton from 'components/follow-tournament-button'
 import Map from 'components/map'
+import ShareModal from 'components/share-modal'
 
 const Headline = styled.div`
   display: flex;
@@ -193,7 +195,7 @@ const ParticipantRating = styled.span`
   }
 `
 
-const tournamentQuery = gql`
+const TOURNAMENT = gql`
   query tournament($slug: String!) {
     tournament(slug: $slug) {
       id
@@ -221,7 +223,16 @@ const tournamentQuery = gql`
     }
   }
 `
+
 class Tournament extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = { isShareModalOpen: false }
+
+    this.toggleShareModal = this.toggleShareModal.bind(this)
+  }
+
   static async getInitialProps({
     query: { slug } = {},
     req: { hostname } = {}
@@ -229,17 +240,20 @@ class Tournament extends Component {
     return { slug, origin: `https://${hostname}` }
   }
 
+  toggleShareModal() {
+    this.setState({ isShareModalOpen: !this.state.isShareModalOpen })
+  }
+
   render() {
     const { slug, origin } = this.props
+    const { isShareModalOpen } = this.state
 
     return (
-      <Query query={tournamentQuery} variables={{ slug }}>
-        {({ loading, error, data }) => {
-          if (loading) return <p>Loading...</p>
-          if (error) return <p>Error :(</p>
-
-          const {
+      <Query query={TOURNAMENT} variables={{ slug }}>
+        {({
+          data: {
             tournament: {
+              id,
               cover,
               name,
               location: { name: location, city, state, coordinates },
@@ -247,119 +261,121 @@ class Tournament extends Component {
               startDate,
               endDate,
               participants
-            }
-          } = data
-
-          return (
-            <>
-              <Head>
-                <title>{name}</title>
-                <meta property="og:title" content={name} key="ogTitle" />
-                <meta
-                  property="og:url"
-                  content={`${origin}/tournaments/${slug}/`}
-                  key="ogUrl"
-                />
-                <meta property="og:type" content="article" key="ogType" />
-                <meta
-                  property="og:image"
-                  content={`${origin}${cover}?width=1200&height=627`}
-                  key="ogImage"
-                />
-                <meta
-                  property="og:description"
-                  content={description}
-                  key="ogDescription"
-                />
-              </Head>
-              <Parallax image={`${cover}?width=500`}>
-                <Section>
-                  <Headline>
-                    <DateBlock>
-                      <Month>{dayjs(startDate).format('MMM')}</Month>
-                      <Day>{dayjs(startDate).format('DD')}</Day>
-                    </DateBlock>
-                    <Title>{name}</Title>
-                  </Headline>
-                  <Button style="primary" block={true}>
-                    Follow
-                  </Button>
-                  <Button style="secondary" block={true}>
-                    Register
-                  </Button>
-                  <Nav>
-                    <ul>
-                      <NavItem active={true}>
-                        <InfoIcon />
-                        Info
-                      </NavItem>
-                      <NavItem>
-                        <FeedIcon />
-                        Feed
-                      </NavItem>
-                      <NavItem>
-                        <ResultsIcon />
-                        Results
-                      </NavItem>
-                      <NavItem>
-                        <ShareIcon />
-                        Share
-                      </NavItem>
-                    </ul>
-                  </Nav>
-                  <Detail>
-                    <dt>
-                      <TimeIcon />
-                    </dt>
-                    <dd>
-                      {formatDate(startDate, endDate)}
-                      <DetailSubLine>
-                        {relativeDateString(startDate)}
-                      </DetailSubLine>
-                    </dd>
-                  </Detail>
-                  <Detail>
-                    <dt>
-                      <LocationIcon />
-                    </dt>
-                    <dd>
-                      {location}
-                      <DetailSubLine>{`${city}, ${state}`}</DetailSubLine>
-                    </dd>
-                  </Detail>
-                  <Description>{description}</Description>
-                </Section>
-                <Section>
-                  {location}:<Map coordinates={coordinates} />
-                </Section>
-                <Section>
-                  <Participants>
-                    {participants.length} players have registered:
-                    <ul>
-                      {participants.map(
-                        ({ id, fullName, location, avatar, rating }) => (
-                          <Participant key={`participant-${id}`}>
-                            <ParticipantAvatar src={avatar} />
-                            <ParticipantDetails>
-                              <ParticipantName>{fullName}</ParticipantName>
-                              <ParticipantLocation>
-                                {location}
-                              </ParticipantLocation>
-                            </ParticipantDetails>
-                            <ParticipantRating>
-                              rt.
-                              <span>{rating}</span>
-                            </ParticipantRating>
-                          </Participant>
-                        )
-                      )}
-                    </ul>
-                  </Participants>
-                </Section>
-              </Parallax>
-            </>
-          )
-        }}
+            } = {}
+          } = {}
+        } = {}) => (
+          <>
+            <Head>
+              <title>{name}</title>
+              <meta property="og:title" content={name} key="ogTitle" />
+              <meta
+                property="og:url"
+                content={`${origin}/tournaments/${slug}/`}
+                key="ogUrl"
+              />
+              <meta property="og:type" content="article" key="ogType" />
+              <meta
+                property="og:image"
+                content={`${origin}${cover}?width=1200&height=627`}
+                key="ogImage"
+              />
+              <meta
+                property="og:description"
+                content={description}
+                key="ogDescription"
+              />
+            </Head>
+            <Parallax image={`${cover}?width=500`}>
+              <Section>
+                <Headline>
+                  <DateBlock>
+                    <Month>{dayjs(startDate).format('MMM')}</Month>
+                    <Day>{dayjs(startDate).format('DD')}</Day>
+                  </DateBlock>
+                  <Title>{name}</Title>
+                </Headline>
+                <FollowTournamentButton tournamentId={id} />
+                <Button style="secondary" block={true}>
+                  Register
+                </Button>
+                <Nav>
+                  <ul>
+                    <NavItem active={true}>
+                      <InfoIcon />
+                      Info
+                    </NavItem>
+                    <NavItem>
+                      <FeedIcon />
+                      Feed
+                    </NavItem>
+                    <NavItem>
+                      <ResultsIcon />
+                      Results
+                    </NavItem>
+                    <NavItem onClick={this.toggleShareModal}>
+                      <ShareIcon />
+                      Share
+                    </NavItem>
+                  </ul>
+                </Nav>
+                <Detail>
+                  <dt>
+                    <TimeIcon />
+                  </dt>
+                  <dd>
+                    {formatDate(startDate, endDate)}
+                    <DetailSubLine>
+                      {relativeDateString(startDate)}
+                    </DetailSubLine>
+                  </dd>
+                </Detail>
+                <Detail>
+                  <dt>
+                    <LocationIcon />
+                  </dt>
+                  <dd>
+                    {location}
+                    <DetailSubLine>{`${city}, ${state}`}</DetailSubLine>
+                  </dd>
+                </Detail>
+                <Description>{description}</Description>
+              </Section>
+              <Section>
+                {location}:<Map coordinates={coordinates} />
+              </Section>
+              <Section>
+                <Participants>
+                  {participants.length} players have registered:
+                  <ul>
+                    {participants.map(
+                      ({ id, fullName, location, avatar, rating }) => (
+                        <Participant key={`participant-${id}`}>
+                          <ParticipantAvatar src={avatar} />
+                          <ParticipantDetails>
+                            <ParticipantName>{fullName}</ParticipantName>
+                            <ParticipantLocation>
+                              {location}
+                            </ParticipantLocation>
+                          </ParticipantDetails>
+                          <ParticipantRating>
+                            rt.
+                            <span>{rating}</span>
+                          </ParticipantRating>
+                        </Participant>
+                      )
+                    )}
+                  </ul>
+                </Participants>
+              </Section>
+            </Parallax>
+            <ShareModal
+              isOpen={isShareModalOpen}
+              toggleOpen={this.toggleShareModal}
+              message={`Check out this tournament on R2Sports: ${name}`}
+              url={`${origin}/tournaments/${slug}`}
+            />
+          </>
+        )}
       </Query>
     )
   }

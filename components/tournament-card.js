@@ -1,9 +1,8 @@
+import { Component } from 'react'
 import styled from 'styled-components'
 import { formatDate } from 'lib/util'
-
-import routes from 'app/routes'
-
-const { Link } = routes
+import Link from 'next/link'
+import { withRouter } from 'next/router'
 
 const Card = styled.div`
   display: flex;
@@ -51,7 +50,11 @@ const TournamentCard = ({
   endDate,
   cover
 }) => (
-  <Link route={`tournaments/${slug}`} prefetch>
+  <Link
+    as={`/tournaments/${slug}`}
+    href={`/tournaments/tournament?slug=${slug}`}
+    prefetch
+  >
     <Card cover={cover}>
       <Date>{formatDate(startDate, endDate)}</Date>
       <Title>{name}</Title>
@@ -62,6 +65,4 @@ const TournamentCard = ({
   </Link>
 )
 
-TournamentCard.displayName = 'TournamentCard'
-
-export default TournamentCard
+export default withRouter(TournamentCard)
