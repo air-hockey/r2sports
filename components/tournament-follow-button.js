@@ -21,7 +21,7 @@ const FOLLOW_TOURNAMENT = gql`
   }
 `
 
-const FollowTournamentButton = ({ tournamentId }) => (
+const TournamentFollowButton = ({ tournamentId }) => (
   <Query query={TOURNAMENT} variables={{ id: tournamentId }}>
     {({ data: { tournament: { isFollowing } = {} } = {} } = {}) => (
       <Mutation mutation={FOLLOW_TOURNAMENT}>
@@ -55,6 +55,6 @@ const FollowTournamentButton = ({ tournamentId }) => (
   </Query>
 )
 
-FollowTournamentButton.displayName = 'FollowTournamentButton'
+TournamentFollowButton.displayName = 'TournamentFollowButton'
 
-export default FollowTournamentButton
+export default TournamentFollowButton

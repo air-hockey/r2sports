@@ -38,8 +38,11 @@ server.use(
   })
 )
 
-server.get('/tournaments/:slug', (req, res) => {
-  app.render(req, res, '/tournaments/tournament', { slug: req.params.slug })
+server.get('/tournaments/:slug/:path?', (req, res) => {
+  app.render(req, res, `/tournaments/tournament`, {
+    slug: req.params.slug,
+    path: req.params.path
+  })
 })
 
 server.get('*', (req, res) => {

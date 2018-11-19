@@ -7,15 +7,12 @@ import { formatDate, relativeDateString } from 'lib/util'
 import { withRouter } from 'next/router'
 
 import Head from 'next/head'
-import { InfoOutline } from 'styled-icons/material/InfoOutline'
-import { Newspaper } from 'styled-icons/fa-regular/Newspaper'
-import { Trophy } from 'styled-icons/fa-solid/Trophy'
-import { Share } from 'styled-icons/fa-solid/Share'
 import { Clock } from 'styled-icons/feather/Clock'
 import { MapPin } from 'styled-icons/feather/MapPin'
 import Parallax from 'components/parallax'
 import Button from 'components/button'
-import FollowTournamentButton from 'components/follow-tournament-button'
+import TournamentFollowButton from 'components/tournament-follow-button'
+import TournamentNav from 'components/tournament-nav'
 import Map from 'components/map'
 import ShareModal from 'components/share-modal'
 
@@ -63,60 +60,14 @@ const Section = styled.section`
   }
 `
 
-const Nav = styled.nav`
-  margin-top: ${p => p.theme.size.s};
-  padding: ${p => p.theme.size.s} 0;
-  border-bottom: thin solid ${p => p.theme.color.lightGray};
-
-  & > ul {
-    display: flex;
-    justify-content: space-around;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-`
-
-const NavItem = styled.li`
-  font-size: ${p => p.theme.font.size.s};
-  color: ${p => (p.active ? p.theme.color.accent : p.theme.color.darkGray)};
-
-  & > svg {
-    height: 1.5em;
-    display: block;
-    margin: 0 auto;
-  }
-`
-
-const iconStyles = css`
+const Icon = Element => styled(Element)`
   height: 1.5em;
   display: block;
   margin: 0 auto;
 `
 
-const InfoIcon = styled(InfoOutline)`
-  ${iconStyles};
-`
-
-const FeedIcon = styled(Newspaper)`
-  ${iconStyles};
-`
-
-const ResultsIcon = styled(Trophy)`
-  ${iconStyles};
-`
-
-const ShareIcon = styled(Share)`
-  ${iconStyles};
-`
-
-const TimeIcon = styled(Clock)`
-  ${iconStyles};
-`
-
-const LocationIcon = styled(MapPin)`
-  ${iconStyles};
-`
+const TimeIcon = Icon(Clock)
+const LocationIcon = Icon(MapPin)
 
 const Detail = styled.dl`
   display: flex;
@@ -234,10 +185,10 @@ class Tournament extends Component {
   }
 
   static async getInitialProps({
-    query: { slug } = {},
+    query: { slug, path, scrollTo } = {},
     req: { hostname } = {}
   }) {
-    return { slug, origin: `https://${hostname}` }
+    return { slug, origin: `https://${hostname}`, path, scrollTo }
   }
 
   toggleShareModal() {
@@ -245,7 +196,7 @@ class Tournament extends Component {
   }
 
   render() {
-    const { slug, origin } = this.props
+    const { slug, origin, path } = this.props
     const { isShareModalOpen } = this.state
 
     return (
@@ -294,30 +245,15 @@ class Tournament extends Component {
                   </DateBlock>
                   <Title>{name}</Title>
                 </Headline>
-                <FollowTournamentButton tournamentId={id} />
+                <TournamentFollowButton tournamentId={id} />
                 <Button style="secondary" block={true}>
                   Register
                 </Button>
-                <Nav>
-                  <ul>
-                    <NavItem active={true}>
-                      <InfoIcon />
-                      Info
-                    </NavItem>
-                    <NavItem>
-                      <FeedIcon />
-                      Feed
-                    </NavItem>
-                    <NavItem>
-                      <ResultsIcon />
-                      Results
-                    </NavItem>
-                    <NavItem onClick={this.toggleShareModal}>
-                      <ShareIcon />
-                      Share
-                    </NavItem>
-                  </ul>
-                </Nav>
+                <TournamentNav
+                  path={path}
+                  slug={slug}
+                  onShareClick={this.toggleShareModal}
+                />
                 <Detail>
                   <dt>
                     <TimeIcon />

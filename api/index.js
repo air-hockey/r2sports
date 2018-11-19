@@ -20,7 +20,8 @@ export default function createGraphQLServer(options = {}) {
   const server = new GraphQLServer({
     typeDefs,
     resolvers,
-    mocks: MOCKS && mocks
+    mocks: MOCKS && mocks,
+    ...options
   })
 
   server.createHttpServer(options)

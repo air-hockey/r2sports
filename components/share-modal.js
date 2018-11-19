@@ -36,6 +36,7 @@ const Close = styled(X)`
   padding: 0.5em;
   width: 2em;
   height: 2em;
+  cursor: pointer;
 `
 
 const Title = styled.h2`
